@@ -11,7 +11,7 @@ public class RijksServiceTest {
 
     @Test
     public void pageNumber() {
-         //given
+        //given
         ApiKey apiKey = new ApiKey();
         String keyString = apiKey.get();
         RijksService service = new RijksServiceFactory().getService();
