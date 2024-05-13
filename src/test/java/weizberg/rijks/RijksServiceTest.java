@@ -22,7 +22,7 @@ public class RijksServiceTest {
                 1
         ).blockingGet();
 
-         //then
+        //then
         assertNotEquals(null, artObjectsCollection.artObjects[0].title);
         assertNotEquals(null, artObjectsCollection.artObjects[0].longTitle);
         assertNotEquals(null, artObjectsCollection.artObjects[0].principalOrFirstMaker);
