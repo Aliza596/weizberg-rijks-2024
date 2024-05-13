@@ -47,7 +47,7 @@ public class RijksServiceTest {
         //then
         assertNotNull(artObjectsCollection.artObjects[0].title);
         assertNotNull(artObjectsCollection.artObjects[0].longTitle);
-        assertNotNull( artObjectsCollection.artObjects[0].principalOrFirstMaker);
+        assertNotNull(artObjectsCollection.artObjects[0].principalOrFirstMaker);
         assertNotNull(artObjectsCollection.artObjects[0].webImage.url);
     }
 
