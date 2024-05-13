@@ -1,6 +1,6 @@
 package weizberg.rijks.json;
 
-public class ArtObjects {
+public class ArtObject {
     public String title;
     public String longTitle;
     public WebImage webImage;

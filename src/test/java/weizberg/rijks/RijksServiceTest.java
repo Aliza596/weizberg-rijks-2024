@@ -2,7 +2,7 @@ package weizberg.rijks;
 
 import com.andrewoid.ApiKey;
 import org.junit.jupiter.api.Test;
-import weizberg.rijks.json.ArtObjects;
+import weizberg.rijks.json.ArtObject;
 import weizberg.rijks.json.ArtObjectsCollection;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -17,16 +17,16 @@ public class RijksServiceTest {
         RijksService service = new RijksServiceFactory().getService();
 
          //when
-         ArtObjects artObjects = service.pageNumber(
+         ArtObjectsCollection artObjectsCollection = service.pageNumber(
                 keyString,
-                70
+                1
         ).blockingGet();
 
          //then
-        assertNotEquals(0, artObjects.title);
-        assertNotEquals(0, artObjects.longTitle);
-        assertNotEquals(0, artObjects.principalOrFirstMaker);
-        assertNotEquals(0, artObjects.webImage.url);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].title);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].longTitle);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].principalOrFirstMaker);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].webImage.url);
     }
 
     @Test
@@ -37,17 +37,17 @@ public class RijksServiceTest {
         RijksService service = new RijksServiceFactory().getService();
 
         //when
-        ArtObjects artObjects = service.queryAndPageNumber(
+        ArtObjectsCollection artObjectsCollection = service.queryAndPageNumber(
                 keyString,
                 "blue",
-                70
+                1
         ).blockingGet();
 
         //then
-        assertNotEquals(0, artObjects.title);
-        assertNotEquals(0, artObjects.longTitle);
-        assertNotEquals(0, artObjects.principalOrFirstMaker);
-        assertNotEquals(0, artObjects.webImage.url);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].title);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].longTitle);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].principalOrFirstMaker);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].webImage.url);
     }
 
     @Test
@@ -58,16 +58,16 @@ public class RijksServiceTest {
         RijksService service = new RijksServiceFactory().getService();
 
         //when
-        ArtObjects artObjects = service.artistAndPageNumber(
+        ArtObjectsCollection artObjectsCollection = service.artistAndPageNumber(
                 keyString,
-                "no one",
-                70
+                "Rembrandt van Rijn",
+                1
         ).blockingGet();
 
         //then
-        assertNotEquals(0, artObjects.title);
-        assertNotEquals(0, artObjects.longTitle);
-        assertNotEquals(0, artObjects.principalOrFirstMaker);
-        assertNotEquals(0, artObjects.webImage.url);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].title);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].longTitle);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].principalOrFirstMaker);
+        assertNotEquals(null, artObjectsCollection.artObjects[0].webImage.url);
     }
 }
