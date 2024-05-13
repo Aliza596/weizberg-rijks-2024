@@ -6,6 +6,7 @@ import weizberg.rijks.json.ArtObject;
 import weizberg.rijks.json.ArtObjectsCollection;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class RijksServiceTest {
 
@@ -23,10 +24,10 @@ public class RijksServiceTest {
         ).blockingGet();
 
         //then
-        assertNotEquals(null, artObjectsCollection.artObjects[0].title);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].longTitle);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].principalOrFirstMaker);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].webImage.url);
+        assertNotNull(artObjectsCollection.artObjects[0].title);
+        assertNotNull(artObjectsCollection.artObjects[0].longTitle);
+        assertNotNull(artObjectsCollection.artObjects[0].principalOrFirstMaker);
+        assertNotNull(artObjectsCollection.artObjects[0].webImage.url);
     }
 
     @Test
@@ -44,10 +45,10 @@ public class RijksServiceTest {
         ).blockingGet();
 
         //then
-        assertNotEquals(null, artObjectsCollection.artObjects[0].title);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].longTitle);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].principalOrFirstMaker);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].webImage.url);
+        assertNotNull(artObjectsCollection.artObjects[0].title);
+        assertNotNull(artObjectsCollection.artObjects[0].longTitle);
+        assertNotNull( artObjectsCollection.artObjects[0].principalOrFirstMaker);
+        assertNotNull(artObjectsCollection.artObjects[0].webImage.url);
     }
 
     @Test
@@ -65,9 +66,9 @@ public class RijksServiceTest {
         ).blockingGet();
 
         //then
-        assertNotEquals(null, artObjectsCollection.artObjects[0].title);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].longTitle);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].principalOrFirstMaker);
-        assertNotEquals(null, artObjectsCollection.artObjects[0].webImage.url);
+        assertNotNull(artObjectsCollection.artObjects[0].title);
+        assertNotNull(artObjectsCollection.artObjects[0].longTitle);
+        assertNotNull(artObjectsCollection.artObjects[0].principalOrFirstMaker);
+        assertNotNull(artObjectsCollection.artObjects[0].webImage.url);
     }
 }
