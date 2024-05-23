@@ -4,18 +4,28 @@ import com.andrewoid.ApiKey;
 import hu.akarnokd.rxjava3.swing.SwingSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import retrofit2.http.Url;
 import weizberg.rijks.json.ArtObject;
 import weizberg.rijks.json.ArtObjectsCollection;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class RijksFrame extends JFrame {
     private JTextField searchField = new JTextField();
     private ArtObjectsCollection artObjectsCollection;
     private Button previousPageButton = new Button("Previous Page");
     private Button nextPageButton = new Button("Next Page");
-    private ApiKey apiKey = new ApiKey();
+    JPanel imagePanel = new JPanel();
+
+    String[] titleAndArtist;
+    String[] imageLinks;
     int pageNumber = 1;
 
     public RijksFrame() {
@@ -41,10 +51,29 @@ public class RijksFrame extends JFrame {
         add(main);
 
         RijksService service = new RijksServiceFactory().getService();
+
+        nextPageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pageNumber++;
+                updateSearch(service);
+            }
+        });
+
+        previousPageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(pageNumber > 1) {
+                    pageNumber--;
+                    updateSearch(service);
+                }
+            }
+        });
     }
 
     private void updateSearch(RijksService service) {
         String query = searchField.getText();
+        ApiKey apiKey = new ApiKey();
         String keyString = apiKey.get();
         if(query.isEmpty())
         {
@@ -79,15 +108,36 @@ public class RijksFrame extends JFrame {
         }
     }
 
-    private void handleResponse(ArtObjectsCollection response) {
+    private void handleResponse(ArtObjectsCollection response) throws IOException {
         artObjectsCollection = response;
-        String[] titleAndArtist = new String[response.artObjects.length];
-        String[] imageLink = new String[response.artObjects.length];
+        titleAndArtist = new String[response.artObjects.length];
+        imageLinks = new String[response.artObjects.length];
         for (int i = 0; i < response.artObjects.length; i++) {
             ArtObject artObject = response.artObjects[i];
-            titleAndArtist[i] = artObject.title + " " + artObject.principalOrFirstMaker;
-            imageLink[i] = artObject.webImage.url;
+            titleAndArtist[i] = "Title: " + artObject.title + " " + "\nArtist: " + artObject.principalOrFirstMaker;
+            imageLinks[i] = artObject.webImage.url;
         }
+
+        openImages();
+    }
+
+    private void openImages() throws IOException {
+        imagePanel .setLayout(new GridLayout(3, 4));
+        for (int i = 0; i < titleAndArtist.length; i++) {
+            URL url = new URL(imageLinks[i]);
+            Image image = ImageIO.read(url);
+            Image scaledImage = image.getScaledInstance(200, -1, Image.SCALE_DEFAULT);
+            JLabel label = new JLabel();
+            ImageIcon imageIcon = new ImageIcon(scaledImage);
+            label.setIcon(imageIcon);
+
+            label.setToolTipText(titleAndArtist[i]);
+
+            imagePanel.add(label);
+        }
+
+        imagePanel.revalidate();
+        imagePanel.repaint();
     }
 
     public static void main(String[] args) {
