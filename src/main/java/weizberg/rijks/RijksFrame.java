@@ -10,6 +10,7 @@ import weizberg.rijks.json.ArtObjectsCollection;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,6 +68,15 @@ public class RijksFrame extends JFrame {
                     pageNumber--;
                     updateSearch(service);
                 }
+            }
+        });
+
+        searchField.getDocument().addDocumentListener(new SimpleDocumentListener() {
+            @Override
+            public void update(DocumentEvent e)
+            {
+                pageNumber = 1;
+                updateSearch(service);
             }
         });
     }
