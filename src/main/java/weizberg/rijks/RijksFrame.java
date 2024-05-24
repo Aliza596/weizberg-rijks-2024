@@ -64,7 +64,7 @@ public class RijksFrame extends JFrame {
         previousPageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(pageNumber > 1) {
+                if (pageNumber > 1) {
                     pageNumber--;
                     updateSearch(service);
                 }
@@ -85,16 +85,15 @@ public class RijksFrame extends JFrame {
         String query = searchField.getText();
         ApiKey apiKey = new ApiKey();
         String keyString = apiKey.get();
-        if(query.isEmpty())
+        if (query.isEmpty())
         {
             Disposable disposablePageNumber = service.pageNumber(keyString, pageNumber)
                     .subscribeOn(Schedulers.io())
                     .observeOn(SwingSchedulers.edt())
                     .subscribe(
-                            (response) ->handleResponse(response),
+                            (response) -> handleResponse(response),
                             Throwable::printStackTrace);
-        }
-        else
+        } else
         {
             Disposable disposableWithQuery = service.queryAndPageNumber(keyString, query, pageNumber)
                     .subscribeOn(Schedulers.io())
@@ -104,7 +103,7 @@ public class RijksFrame extends JFrame {
                             Throwable::printStackTrace
                     );
 
-            if(service.queryAndPageNumber(keyString, query, 0) == null)
+            if (service.queryAndPageNumber(keyString, query, 0) == null)
             {
                 Disposable disposableWithArtist = service.artistAndPageNumber(keyString, query, pageNumber)
                         .subscribeOn(Schedulers.io())
@@ -132,7 +131,7 @@ public class RijksFrame extends JFrame {
     }
 
     private void openImages() throws IOException {
-        imagePanel .setLayout(new GridLayout(3, 4));
+        imagePanel.setLayout(new GridLayout(3, 4));
         for (int i = 0; i < titleAndArtist.length; i++) {
             URL url = new URL(imageLinks[i]);
             Image image = ImageIO.read(url);
