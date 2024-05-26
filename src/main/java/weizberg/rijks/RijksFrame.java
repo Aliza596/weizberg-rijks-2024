@@ -114,8 +114,7 @@ public class RijksFrame extends JFrame {
                                 (response) -> handleResponse(response),
                                 Throwable::printStackTrace
                         );
-            }
-            else
+            } else
             {
                 Disposable disposableWithQuery = service.queryAndPageNumber(keyString, query, pageNumber)
                         .subscribeOn(Schedulers.io())
