@@ -9,13 +9,13 @@ import java.net.URL;
 
 public class DisplayImageFrame extends JFrame {
 
-    public DisplayImageFrame(String imageURL, String titleAndArtist) throws IOException {
+    public DisplayImageFrame(String imageUrl, String titleAndArtist) throws IOException {
         setTitle(titleAndArtist);
         setSize(1000, 800);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 
-        URL url = new URL(imageURL);
+        URL url = new URL(imageUrl);
         Image image = ImageIO.read(url);
 
         Image scaledImage = image.getScaledInstance(800, -1, Image.SCALE_DEFAULT);
