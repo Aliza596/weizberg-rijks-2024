@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.http.Url;
 import weizberg.rijks.json.ArtObject;
 import weizberg.rijks.json.ArtObjectsCollection;
+import weizberg.rijks.json.DisplayImageFrame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,6 +15,8 @@ import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,6 +26,7 @@ public class RijksFrame extends JFrame {
     private ArtObjectsCollection artObjectsCollection;
     private Button previousPageButton = new Button("Previous Page");
     private Button nextPageButton = new Button("Next Page");
+
     JPanel imagePanel = new JPanel();
 
     String[] titleAndArtist;
@@ -32,8 +36,8 @@ public class RijksFrame extends JFrame {
     public RijksFrame() {
 
         setTitle("RijksFrame");
-        setSize(300, 600);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(1000, 800);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JPanel north = new JPanel();
         north.setLayout(new BorderLayout());
@@ -50,6 +54,9 @@ public class RijksFrame extends JFrame {
         main.add(north, BorderLayout.NORTH);
 
         add(main);
+
+        ApiKey apiKey = new ApiKey();
+        String keyString = apiKey.get();
 
         RijksService service = new RijksServiceFactory().getService();
 
@@ -133,14 +140,28 @@ public class RijksFrame extends JFrame {
     private void openImages() throws IOException {
         imagePanel.setLayout(new GridLayout(3, 4));
         for (int i = 0; i < titleAndArtist.length; i++) {
-            URL url = new URL(imageLinks[i]);
+            String link = imageLinks[i];
+            URL url = new URL(link);
             Image image = ImageIO.read(url);
             Image scaledImage = image.getScaledInstance(200, -1, Image.SCALE_DEFAULT);
             JLabel label = new JLabel();
             ImageIcon imageIcon = new ImageIcon(scaledImage);
             label.setIcon(imageIcon);
 
-            label.setToolTipText(titleAndArtist[i]);
+            String titleArtist = titleAndArtist[i];
+            label.setToolTipText(titleArtist);
+
+            label.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        new DisplayImageFrame(link, titleArtist).setVisible(true);
+                    } catch (MalformedURLException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            });
 
             imagePanel.add(label);
         }
