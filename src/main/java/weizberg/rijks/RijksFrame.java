@@ -26,8 +26,10 @@ public class RijksFrame extends JFrame {
     private ArtObjectsCollection artObjectsCollection;
     private Button previousPageButton = new Button("Previous Page");
     private Button nextPageButton = new Button("Next Page");
+    JPanel main = new JPanel();
 
-    JPanel imagePanel = new JPanel();
+
+    JPanel imagePanel = new JPanel(new GridLayout(3, 4));
 
     String[] titleAndArtist;
     String[] imageLinks;
@@ -49,9 +51,9 @@ public class RijksFrame extends JFrame {
 
         north.add(topPanel, BorderLayout.CENTER);
 
-        JPanel main = new JPanel();
         main.setLayout(new BorderLayout());
         main.add(north, BorderLayout.NORTH);
+        main.add(imagePanel, BorderLayout.CENTER);
 
         add(main);
 
@@ -92,6 +94,7 @@ public class RijksFrame extends JFrame {
         String query = searchField.getText();
         ApiKey apiKey = new ApiKey();
         String keyString = apiKey.get();
+
         if (query.isEmpty())
         {
             Disposable disposablePageNumber = service.pageNumber(keyString, pageNumber)
@@ -102,17 +105,19 @@ public class RijksFrame extends JFrame {
                             Throwable::printStackTrace);
         } else
         {
-            Disposable disposableWithQuery = service.queryAndPageNumber(keyString, query, pageNumber)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(SwingSchedulers.edt())
-                    .subscribe(
-                            (response) -> handleResponse(response),
-                            Throwable::printStackTrace
-                    );
-
-            if (service.queryAndPageNumber(keyString, query, 0) == null)
+            if (service.queryAndPageNumber(keyString, query, 1) == null)
             {
                 Disposable disposableWithArtist = service.artistAndPageNumber(keyString, query, pageNumber)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(SwingSchedulers.edt())
+                        .subscribe(
+                                (response) -> handleResponse(response),
+                                Throwable::printStackTrace
+                        );
+            }
+            else
+            {
+                Disposable disposableWithQuery = service.queryAndPageNumber(keyString, query, pageNumber)
                         .subscribeOn(Schedulers.io())
                         .observeOn(SwingSchedulers.edt())
                         .subscribe(
@@ -132,21 +137,24 @@ public class RijksFrame extends JFrame {
             ArtObject artObject = response.artObjects[i];
             titleAndArtist[i] = "Title: " + artObject.title + " " + "\nArtist: " + artObject.principalOrFirstMaker;
             imageLinks[i] = artObject.webImage.url;
+            System.out.println("printed" + titleAndArtist[i] + imageLinks[i]);
         }
 
         openImages();
     }
 
     private void openImages() throws IOException {
-        imagePanel.setLayout(new GridLayout(3, 4));
+        imagePanel.removeAll();
         for (int i = 0; i < titleAndArtist.length; i++) {
             String link = imageLinks[i];
+            System.out.println("image link:" + imageLinks[i]);
             URL url = new URL(link);
             Image image = ImageIO.read(url);
             Image scaledImage = image.getScaledInstance(200, -1, Image.SCALE_DEFAULT);
             JLabel label = new JLabel();
             ImageIcon imageIcon = new ImageIcon(scaledImage);
             label.setIcon(imageIcon);
+            main.add(label);
 
             String titleArtist = titleAndArtist[i];
             label.setToolTipText(titleArtist);

@@ -11,7 +11,7 @@ public class DisplayImageFrame extends JFrame {
 
     public DisplayImageFrame(String imageUrl, String titleAndArtist) throws IOException {
         setTitle(titleAndArtist);
-        setSize(1000, 800);
+        setSize(800, 500);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 
@@ -30,7 +30,7 @@ public class DisplayImageFrame extends JFrame {
 
         JPanel main = new JPanel();
         main.setLayout(new BorderLayout());
-        main.add(label, BorderLayout.CENTER);
+        main.add(scrollPane, BorderLayout.CENTER);
         add(main);
     }
 }
