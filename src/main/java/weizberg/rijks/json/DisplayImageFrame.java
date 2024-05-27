@@ -25,8 +25,6 @@ public class DisplayImageFrame extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(label);
         setPreferredSize(new Dimension(1000, 800));
-        add(scrollPane, BorderLayout.CENTER);
-
 
         JPanel main = new JPanel();
         main.setLayout(new BorderLayout());

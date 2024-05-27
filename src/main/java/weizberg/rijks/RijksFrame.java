@@ -132,7 +132,8 @@ public class RijksFrame extends JFrame {
             label.setIcon(imageIcon);
             main.add(label);
 
-            String titleArtist = artObjectsCollection.artObjects[i].title + ", " + artObjectsCollection.artObjects[i].principalOrFirstMaker;
+            String titleArtist = artObjectsCollection.artObjects[i].title
+                    + ", " + artObjectsCollection.artObjects[i].principalOrFirstMaker;
             label.setToolTipText(titleArtist);
 
             label.addMouseListener(new MouseAdapter() {
