@@ -4,14 +4,12 @@ import com.andrewoid.ApiKey;
 import hu.akarnokd.rxjava3.swing.SwingSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import retrofit2.http.Url;
 import weizberg.rijks.json.ArtObject;
 import weizberg.rijks.json.ArtObjectsCollection;
 import weizberg.rijks.json.DisplayImageFrame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,9 +25,9 @@ public class RijksFrame extends JFrame {
     private Button previousPageButton = new Button("Previous Page");
     private Button nextPageButton = new Button("Next Page");
     private RijksService service;
-    JPanel main = new JPanel();
-    JPanel imagePanel = new JPanel(new GridLayout(3, 4));
-    int pageNumber = 1;
+    private JPanel main = new JPanel();
+    private JPanel imagePanel = new JPanel(new GridLayout(3, 4));
+    private int pageNumber = 1;
 
     public RijksFrame() {
 
@@ -92,8 +90,6 @@ public class RijksFrame extends JFrame {
                             Throwable::printStackTrace);
         } else
         {
-            if (service.queryAndPageNumber(keyString, query, 1) == null)
-            {
                 Disposable disposableWithArtist = service.artistAndPageNumber(keyString, query, pageNumber)
                         .subscribeOn(Schedulers.io())
                         .observeOn(SwingSchedulers.edt())
@@ -101,8 +97,7 @@ public class RijksFrame extends JFrame {
                                 (response) -> handleResponse(response),
                                 Throwable::printStackTrace
                         );
-            } else
-            {
+
                 Disposable disposableWithQuery = service.queryAndPageNumber(keyString, query, pageNumber)
                         .subscribeOn(Schedulers.io())
                         .observeOn(SwingSchedulers.edt())
@@ -110,8 +105,6 @@ public class RijksFrame extends JFrame {
                                 (response) -> handleResponse(response),
                                 Throwable::printStackTrace
                         );
-            }
-
         }
     }
 
@@ -122,8 +115,8 @@ public class RijksFrame extends JFrame {
 
     private void openImages() throws IOException {
         imagePanel.removeAll();
-        for (int i = 0; i < artObjectsCollection.artObjects.length; i++) {
-            String link = artObjectsCollection.artObjects[i].webImage.url;
+        for (ArtObject artObject : artObjectsCollection.artObjects) {
+            String link = artObject.webImage.url;
             URL url = new URL(link);
             Image image = ImageIO.read(url);
             Image scaledImage = image.getScaledInstance(200, -1, Image.SCALE_DEFAULT);
@@ -132,8 +125,8 @@ public class RijksFrame extends JFrame {
             label.setIcon(imageIcon);
             main.add(label);
 
-            String titleArtist = artObjectsCollection.artObjects[i].title
-                    + ", " + artObjectsCollection.artObjects[i].principalOrFirstMaker;
+            String titleArtist = artObject.title
+                    + ", " + artObject.principalOrFirstMaker;
             label.setToolTipText(titleArtist);
 
             label.addMouseListener(new MouseAdapter() {
