@@ -26,13 +26,9 @@ public class RijksFrame extends JFrame {
     private ArtObjectsCollection artObjectsCollection;
     private Button previousPageButton = new Button("Previous Page");
     private Button nextPageButton = new Button("Next Page");
+    private RijksService service;
     JPanel main = new JPanel();
-
-
     JPanel imagePanel = new JPanel(new GridLayout(3, 4));
-
-    String[] titleAndArtist;
-    String[] imageLinks;
     int pageNumber = 1;
 
     public RijksFrame() {
@@ -60,13 +56,12 @@ public class RijksFrame extends JFrame {
         ApiKey apiKey = new ApiKey();
         String keyString = apiKey.get();
 
-        RijksService service = new RijksServiceFactory().getService();
+        service = new RijksServiceFactory().getService();
 
         nextPageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                pageNumber++;
-                updateSearch(service);
+                updateSearch(++pageNumber);
             }
         });
 
@@ -74,23 +69,15 @@ public class RijksFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (pageNumber > 1) {
-                    pageNumber--;
-                    updateSearch(service);
+                    updateSearch(--pageNumber);
                 }
             }
         });
 
-        searchField.getDocument().addDocumentListener(new SimpleDocumentListener() {
-            @Override
-            public void update(DocumentEvent e)
-            {
-                pageNumber = 1;
-                updateSearch(service);
-            }
-        });
+        searchField.addActionListener(e -> updateSearch(1));
     }
 
-    private void updateSearch(RijksService service) {
+    private void updateSearch(int pageNumber) {
         String query = searchField.getText();
         ApiKey apiKey = new ApiKey();
         String keyString = apiKey.get();
@@ -130,23 +117,13 @@ public class RijksFrame extends JFrame {
 
     private void handleResponse(ArtObjectsCollection response) throws IOException {
         artObjectsCollection = response;
-        titleAndArtist = new String[response.artObjects.length];
-        imageLinks = new String[response.artObjects.length];
-        for (int i = 0; i < response.artObjects.length; i++) {
-            ArtObject artObject = response.artObjects[i];
-            titleAndArtist[i] = "Title: " + artObject.title + " " + "\nArtist: " + artObject.principalOrFirstMaker;
-            imageLinks[i] = artObject.webImage.url;
-            System.out.println("printed" + titleAndArtist[i] + imageLinks[i]);
-        }
-
         openImages();
     }
 
     private void openImages() throws IOException {
         imagePanel.removeAll();
-        for (int i = 0; i < titleAndArtist.length; i++) {
-            String link = imageLinks[i];
-            System.out.println("image link:" + imageLinks[i]);
+        for (int i = 0; i < artObjectsCollection.artObjects.length; i++) {
+            String link = artObjectsCollection.artObjects[i].webImage.url;
             URL url = new URL(link);
             Image image = ImageIO.read(url);
             Image scaledImage = image.getScaledInstance(200, -1, Image.SCALE_DEFAULT);
@@ -155,7 +132,7 @@ public class RijksFrame extends JFrame {
             label.setIcon(imageIcon);
             main.add(label);
 
-            String titleArtist = titleAndArtist[i];
+            String titleArtist = artObjectsCollection.artObjects[i].title + ", " + artObjectsCollection.artObjects[i].principalOrFirstMaker;
             label.setToolTipText(titleArtist);
 
             label.addMouseListener(new MouseAdapter() {
@@ -169,7 +146,6 @@ public class RijksFrame extends JFrame {
                     }
                 }
             });
-
             imagePanel.add(label);
         }
 
