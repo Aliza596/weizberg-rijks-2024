@@ -28,6 +28,8 @@ public class RijksFrame extends JFrame {
     private JPanel main = new JPanel();
     private JPanel imagePanel = new JPanel(new GridLayout(3, 4));
     private int pageNumber = 1;
+    ApiKey apiKey = new ApiKey();
+    String keyString = apiKey.get();
 
     public RijksFrame() {
 
@@ -77,8 +79,6 @@ public class RijksFrame extends JFrame {
 
     private void updateSearch(int pageNumber) {
         String query = searchField.getText();
-        ApiKey apiKey = new ApiKey();
-        String keyString = apiKey.get();
 
         if (query.isEmpty())
         {

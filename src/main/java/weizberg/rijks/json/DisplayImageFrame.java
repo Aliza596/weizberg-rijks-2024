@@ -24,7 +24,6 @@ public class DisplayImageFrame extends JFrame {
         label.setIcon(imageIcon);
 
         JScrollPane scrollPane = new JScrollPane(label);
-        setPreferredSize(new Dimension(1000, 800));
 
         JPanel main = new JPanel();
         main.setLayout(new BorderLayout());
