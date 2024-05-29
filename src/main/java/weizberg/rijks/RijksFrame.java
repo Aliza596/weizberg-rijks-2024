@@ -28,8 +28,8 @@ public class RijksFrame extends JFrame {
     private JPanel main = new JPanel();
     private JPanel imagePanel = new JPanel(new GridLayout(3, 4));
     private int pageNumber = 1;
-    ApiKey apiKey = new ApiKey();
-    String keyString = apiKey.get();
+    private ApiKey apiKey = new ApiKey();
+    private String keyString = apiKey.get();
 
     public RijksFrame() {
 
@@ -52,9 +52,6 @@ public class RijksFrame extends JFrame {
         main.add(imagePanel, BorderLayout.CENTER);
 
         add(main);
-
-        ApiKey apiKey = new ApiKey();
-        String keyString = apiKey.get();
 
         service = new RijksServiceFactory().getService();
 
@@ -90,14 +87,6 @@ public class RijksFrame extends JFrame {
                             Throwable::printStackTrace);
         } else
         {
-                Disposable disposableWithArtist = service.artistAndPageNumber(keyString, query, pageNumber)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(SwingSchedulers.edt())
-                        .subscribe(
-                                (response) -> handleResponse(response),
-                                Throwable::printStackTrace
-                        );
-
                 Disposable disposableWithQuery = service.queryAndPageNumber(keyString, query, pageNumber)
                         .subscribeOn(Schedulers.io())
                         .observeOn(SwingSchedulers.edt())
@@ -123,7 +112,6 @@ public class RijksFrame extends JFrame {
             JLabel label = new JLabel();
             ImageIcon imageIcon = new ImageIcon(scaledImage);
             label.setIcon(imageIcon);
-            main.add(label);
 
             String titleArtist = artObject.title
                     + ", " + artObject.principalOrFirstMaker;
